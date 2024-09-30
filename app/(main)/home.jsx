@@ -14,22 +14,22 @@ const Home = () => {
   const { user, setAuth } = useAuth();
   const router = useRouter();
 
-  console.log("user:", user);
+  // console.log("user:", user);
 
-  const onLogout = async () => {
-    setAuth(null);
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      Alert.alert("Cerrar Sesión", "Ocurrió un error al cerrar sesión");
-    }
-  };
+  // const onLogout = async () => {
+  //   setAuth(null);
+  //   const { error } = await supabase.auth.signOut();
+  //   if (error) {
+  //     Alert.alert("Cerrar Sesión", "Ocurrió un error al cerrar sesión");
+  //   }
+  // };
 
   return (
     <ScreenWrapper bg="white">
       <StatusBar style="dark" />
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Link Up</Text>
+          <Text style={styles.title}>EducaNic</Text>
           <View style={styles.icons}>
             <Pressable onPress={() => router.push("notifications")}>
               <Icon
@@ -60,7 +60,7 @@ const Home = () => {
           </View>
         </View>
       </View>
-      <Button title="logout" onPress={onLogout} />
+      {/* <Button title="logout" onPress={onLogout} /> */}
     </ScreenWrapper>
   );
 };
