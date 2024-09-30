@@ -29,7 +29,7 @@ const EditProfile = () => {
   const [user, setUser] = useState({
     name: "",
     phoneNumber: "",
-    image: "",
+    image: null,
     bio: "",
     address: "",
   });
@@ -40,8 +40,8 @@ const EditProfile = () => {
         name: currentUser.name || "",
         phoneNumber: currentUser.phoneNumber || "",
         image: currentUser.image || null,
-        bio: currentUser.bio || "",
         address: currentUser.address || "",
+        bio: currentUser.bio || "",
       });
     }
   }, [currentUser]);
