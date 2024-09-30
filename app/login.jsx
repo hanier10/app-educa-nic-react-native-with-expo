@@ -10,6 +10,7 @@ import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import Input from "../components/Input";
 import ButtonGeneral from "../components/ButtonGeneral";
+import { supabase } from "../lib/supabase";
 
 const Login = () => {
   const router = useRouter();
@@ -17,10 +18,25 @@ const Login = () => {
   const passwordRef = useRef("");
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Login", "Por favor rellene todos los campos");
       return;
+    }
+
+    let email = emailRef.current.trim();
+    let password = passwordRef.current.trim();
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    console.log("error", error);
+    if (error) {
+      Alert.alert("Error", error.message);
     }
   };
 

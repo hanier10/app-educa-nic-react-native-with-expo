@@ -10,6 +10,7 @@ import { hp, wp } from "../helpers/common";
 import { theme } from "../constants/theme";
 import Input from "../components/Input";
 import ButtonGeneral from "../components/ButtonGeneral";
+import { supabase } from "../lib/supabase";
 
 const SignUp = () => {
   const router = useRouter();
@@ -18,10 +19,36 @@ const SignUp = () => {
   const passwordRef = useRef("");
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Registrarse", "Por favor rellene todos los campos");
       return;
+    }
+
+    let name = nameRef.current.trim();
+    let email = emailRef.current.trim();
+    let password = passwordRef.current.trim();
+
+    setLoading(true);
+
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+        },
+      },
+    });
+    setLoading(false);
+
+    // console.log("session: ", session);
+    // console.log("error: ", error);
+    if (error) {
+      Alert.alert("Error", error.message);
     }
   };
 
@@ -44,7 +71,7 @@ const SignUp = () => {
           <Input
             icon={<Icon name="user" size={26} strokeWidth={1.6} />}
             placeholder="Ingrese su usuario"
-            onChangeText={(value) => (emailRef.current = value)}
+            onChangeText={(value) => (nameRef.current = value)}
           />
 
           <Input
