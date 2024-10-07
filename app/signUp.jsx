@@ -65,11 +65,11 @@ const SignUp = () => {
       Alert.alert("Error", error.message);
     }
 
-    // if (role === "student") {
-    //   router.push("home");
-    // } else if (role === "teacher") {
-    //   router.push("teacherDashboard");
-    // }
+    if (role === "student") {
+      router.push("home");
+    } else if (role === "teacher") {
+      router.push("teacherDashboard");
+    }
 
     // console.log("session: ", session);
     // console.log("error: ", error);
