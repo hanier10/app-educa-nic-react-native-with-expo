@@ -19,7 +19,7 @@ const Home = () => {
       <StatusBar style="dark" />
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>EducaNic</Text>
+          <Text style={styles.title}>Perfil Docente</Text>
           <View style={styles.icons}>
             <Pressable onPress={() => router.push("notifications")}>
               <Icon

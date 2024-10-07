@@ -1,7 +1,6 @@
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useRef, useState } from "react";
 import ScreenWrapper from "../components/ScreenWrapper";
-
 import Icon from "../assets/icons";
 import { StatusBar } from "expo-status-bar";
 import BackButton from "../components/BackButton";
@@ -27,17 +26,40 @@ const Login = () => {
     let email = emailRef.current.trim();
     let password = passwordRef.current.trim();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({
+
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
-    setLoading(false);
-
-    console.log("error", error);
     if (error) {
+      setLoading(false);
       Alert.alert("Error", error.message);
+      return;
     }
+
+    if (data.user) {
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("role")
+        .eq("id", data.user.id)
+        .single();
+
+      if (userError) {
+        setLoading(false);
+        Alert.alert("Error", "No se pudo obtener el rol del usuario");
+        return;
+      }
+
+      // Aquí puedes manejar la navegación basada en el rol
+      if (userData.role === "student") {
+        router.push("home");
+      } else if (userData.role === "teacher") {
+        router.push("teacherDashboard");
+      }
+    }
+
+    setLoading(false);
   };
 
   return (

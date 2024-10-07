@@ -1,7 +1,13 @@
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
 import React, { useRef, useState } from "react";
 import ScreenWrapper from "../components/ScreenWrapper";
-
 import Icon from "../assets/icons";
 import { StatusBar } from "expo-status-bar";
 import BackButton from "../components/BackButton";
@@ -17,10 +23,11 @@ const SignUp = () => {
   const emailRef = useRef("");
   const nameRef = useRef("");
   const passwordRef = useRef("");
+  const [role, setRole] = useState("student");
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    if (!emailRef.current || !passwordRef.current) {
+    if (!emailRef.current || !passwordRef.current || !nameRef.current) {
       Alert.alert("Registrarse", "Por favor rellene todos los campos");
       return;
     }
@@ -40,17 +47,64 @@ const SignUp = () => {
       options: {
         data: {
           name,
+          role,
         },
       },
     });
     setLoading(false);
 
+    if (role === "student") {
+      router.push("home");
+    } else if (role === "teacher") {
+      router.push("teacherDashboard");
+    }
+
     // console.log("session: ", session);
     // console.log("error: ", error);
-    if (error) {
-      Alert.alert("Error", error.message);
-    }
+    // if (error) {
+    //   Alert.alert("Error", error.message);
+    // }
+
+    // const { data, error } = await supabase.auth.signUp({
+    //   email,
+    //   password,
+    //   options: {
+    //     data: {
+    //       name,
+    //       role,
+    //     },
+    //   },
+    // });
+
+    // if (error) {
+    //   setLoading(false);
+    //   Alert.alert("Error", error.message);
+    //   return;
+    // }
+
+    // if (data.user) {
+    //   // El trigger se encargará de insertar los datos en public.users
+    //   setLoading(false);
+    //   Alert.alert("Éxito", "Usuario registrado correctamente");
+    //   router.push("login");
+    // }
   };
+
+  const RoleOption = ({ value, label }) => (
+    <TouchableOpacity
+      style={[styles.roleOption, role === value && styles.roleOptionSelected]}
+      onPress={() => setRole(value)}
+    >
+      <Text
+        style={[
+          styles.roleOptionText,
+          role === value && styles.roleOptionTextSelected,
+        ]}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
     <ScreenWrapper bg="white">
@@ -64,13 +118,13 @@ const SignUp = () => {
         </View>
 
         <View style={styles.form}>
-          <Text style={{ fontSize: hp(1.5), color: theme.colors.text }}>
+          <Text style={styles.formText}>
             Por favor rellene los campos para crear una cuenta
           </Text>
 
           <Input
             icon={<Icon name="user" size={26} strokeWidth={1.6} />}
-            placeholder="Ingrese su usuario"
+            placeholder="Ingrese su nombre y su apellido"
             onChangeText={(value) => (nameRef.current = value)}
           />
 
@@ -86,6 +140,19 @@ const SignUp = () => {
             secureTextEntry
             onChangeText={(value) => (passwordRef.current = value)}
           />
+
+          <View style={styles.roleContainer}>
+            <Icon
+              name="user"
+              size={26}
+              strokeWidth={1.6}
+              style={styles.roleIcon}
+            />
+            <View style={styles.roleOptions}>
+              <RoleOption value="student" label="Estudiante" />
+              <RoleOption value="teacher" label="Maestro" />
+            </View>
+          </View>
 
           <ButtonGeneral
             title={"Registrarse"}
@@ -132,6 +199,10 @@ const styles = StyleSheet.create({
   form: {
     gap: 25,
   },
+  formText: {
+    fontSize: hp(1.5),
+    color: theme.colors.text,
+  },
   forgotPassword: {
     textAlign: "right",
     fontWeight: theme.fonts.semibold,
@@ -147,5 +218,39 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: theme.colors.text,
     fontSize: hp(1.6),
+  },
+  roleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: theme.colors.darkLight,
+    borderRadius: 8,
+    height: 50,
+    paddingHorizontal: 10,
+  },
+  roleIcon: {
+    marginRight: 10,
+    color: theme.colors.text,
+  },
+  roleOptions: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  roleOption: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+  },
+  roleOptionSelected: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  roleOptionText: {
+    color: theme.colors.text,
+    fontSize: hp(1.6),
+  },
+  roleOptionTextSelected: {
+    color: theme.colors.primary,
+    fontWeight: theme.fonts.semibold,
   },
 });
