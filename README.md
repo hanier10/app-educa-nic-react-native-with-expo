@@ -1,6 +1,6 @@
-# Welcome to your Expo app 👋
+# App Educa Nic - La aplicación móvil para transformar y automatizar la gestión educativa 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![Logo](https://raw.githubusercontent.com/hanier10/app-educa-nic-react-native-with-expo/refs/heads/main/assets/images/logo.png)
 
 ## Get started
 
