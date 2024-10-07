@@ -27,7 +27,12 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    if (!emailRef.current || !passwordRef.current || !nameRef.current) {
+    if (
+      !emailRef.current ||
+      !passwordRef.current ||
+      !nameRef.current ||
+      !role
+    ) {
       Alert.alert("Registrarse", "Por favor rellene todos los campos");
       return;
     }
@@ -35,6 +40,7 @@ const SignUp = () => {
     let name = nameRef.current.trim();
     let email = emailRef.current.trim();
     let password = passwordRef.current.trim();
+    // let role = role.current.trim();
 
     setLoading(true);
 
@@ -53,11 +59,17 @@ const SignUp = () => {
     });
     setLoading(false);
 
-    if (role === "student") {
-      router.push("home");
-    } else if (role === "teacher") {
-      router.push("teacherDashboard");
+    // console.log("session: ", session);
+    // console.log("error: ", error);
+    if (error) {
+      Alert.alert("Error", error.message);
     }
+
+    // if (role === "student") {
+    //   router.push("home");
+    // } else if (role === "teacher") {
+    //   router.push("teacherDashboard");
+    // }
 
     // console.log("session: ", session);
     // console.log("error: ", error);
