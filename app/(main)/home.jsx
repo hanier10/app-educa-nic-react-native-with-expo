@@ -9,6 +9,8 @@ import Icon from "../../assets/icons";
 import { useRouter } from "expo-router";
 import Avatar from "../../components/Avatar";
 import { StatusBar } from "expo-status-bar";
+import ImageSlider from "../../components/ImageSlider";
+// import Icon from "react-native-vector-icons/FontAwesome";
 
 const Home = () => {
   const { user, setAuth } = useAuth();
@@ -49,8 +51,28 @@ const Home = () => {
             </Pressable>
           </View>
         </View>
+
+        <View className="flex-row justify-between items-center mx-5 mb-5">
+          <View className="space-y-2">
+            <Text
+              style={{ fontSize: hp(3) }}
+              className="font-bold tracking-wider text-neutral-700"
+            >
+              Bienvenido
+            </Text>
+            <Text
+              style={{ fontSize: hp(3) }}
+              className="font-bold tracking-wider text-rose-500"
+            >
+              {user?.name}
+            </Text>
+          </View>
+        </View>
+
+        <View>
+          <ImageSlider />
+        </View>
       </View>
-      {/* <Button title="logout" onPress={onLogout} /> */}
     </ScreenWrapper>
   );
 };
