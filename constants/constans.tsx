@@ -33,7 +33,7 @@ export const bannerData: BannerDataTypes[] = [
   {
     bannerImageUrl: require("../assets/banner/3.webp"),
   },
-  {
-    bannerImageUrl: require("../assets/banner/4.webp"),
-  },
+  // {
+  //   bannerImageUrl: require("../assets/banner/4.webp"),
+  // },
 ];
