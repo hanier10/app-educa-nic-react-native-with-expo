@@ -34,7 +34,7 @@ const TeacherCard = ({ name, image, subject, url }) => (
   </View>
 );
 
-const SubjectCard = ({ name, icon, schedule }) => (
+const SubjectCard = ({ name, icon, schedule, url }) => (
   <View style={styles.subjectCard}>
     <View style={styles.subjectIconContainer}>{icon}</View>
     <View style={styles.subjectInfo}>
@@ -42,7 +42,9 @@ const SubjectCard = ({ name, icon, schedule }) => (
       <Text style={styles.subjectSchedule}>{schedule}</Text>
     </View>
     <TouchableOpacity style={styles.viewSubjectButton}>
-      <Text style={styles.viewSubjectButtonText}>Ver</Text>
+      <Text style={styles.viewSubjectButtonText} onPress={url}>
+        Ver
+      </Text>
     </TouchableOpacity>
   </View>
 );
@@ -52,7 +54,7 @@ const Home = () => {
   const router = useRouter();
 
   const weekDays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
-  const timeSlots = ["7:00 AM", "8:30 AM", "10:00 AM", "11:30 AM", "1:00 PM"];
+  const timeSlots = ["7:00 AM", "8:30 AM", "10:00 AM", "11:30 AM", "12:45 PM"];
 
   const schedule = {
     Lunes: [
@@ -109,12 +111,20 @@ const Home = () => {
     {
       name: "Lengua y Literatura",
       icon: <Ionicons name="book-outline" size={24} color="#007AFF" />,
-      schedule: "Viernes: 10:30 AM a 12:00 PM",
+      schedule: "Lunes: 08:30 AM a 10:30 AM",
+      url: () => router.push("course-details/lengua"),
     },
     {
       name: "Química",
       icon: <Ionicons name="flask-outline" size={24} color="#007AFF" />,
-      schedule: "Lunes: 9:00 AM a 10:30 AM",
+      schedule: "Jueves: 08:30 AM a 10:30 AM",
+      url: () => router.push("course-details/quimica"),
+    },
+    {
+      name: "Historia",
+      icon: <Ionicons name="earth" size={24} color="#007AFF" />,
+      schedule: "Jueves: 11:30 AM a 12:45 MD",
+      url: () => router.push("course-details/historia"),
     },
   ];
 
@@ -182,10 +192,12 @@ const Home = () => {
 
         {/* Mis Asignaturas */}
         <View style={styles.headerSection}>
-          <Text style={styles.headerTitle}>Mis Asignaturas</Text>
-          <TouchableOpacity>
+          <Text style={styles.headerTitle}>
+            Asignaturas Vistas Recientemente
+          </Text>
+          {/* <TouchableOpacity>
             <Text style={styles.viewAllText}>Ver todas</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.subjectsContainer}>
           {subjects.map((subject, index) => (
@@ -362,7 +374,7 @@ const styles = StyleSheet.create({
     marginRight: wp(1),
   },
   timeHeader: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: "#007AFF",
     padding: wp(2),
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
@@ -373,7 +385,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   dayHeader: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: "#007AFF",
     padding: wp(2),
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
