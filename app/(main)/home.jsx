@@ -9,6 +9,7 @@ import Icon from "../../assets/icons";
 import { useRouter } from "expo-router";
 import Avatar from "../../components/Avatar";
 import { StatusBar } from "expo-status-bar";
+import HomeBannerSlider from "../../components/HomeBannerSlider";
 
 const Home = () => {
   const { user, setAuth } = useAuth();
@@ -68,7 +69,7 @@ const Home = () => {
         </View>
 
         <View>
-          <Text>Hola</Text>
+          <HomeBannerSlider />
         </View>
       </View>
     </ScreenWrapper>
