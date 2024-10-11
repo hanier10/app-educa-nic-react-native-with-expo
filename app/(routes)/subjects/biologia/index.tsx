@@ -55,6 +55,9 @@ export default function index() {
             </Pressable>
           </View>
         </View>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </Pressable>
         <Text style={styles.header}>Biología</Text>
 
         <Image
@@ -105,6 +108,9 @@ export default function index() {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    marginRight: wp(4),
+  },
   headerBar: {
     flexDirection: "row",
     alignItems: "center",
