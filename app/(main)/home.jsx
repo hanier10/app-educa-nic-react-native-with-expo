@@ -51,6 +51,29 @@ const Home = () => {
   const { user } = useAuth();
   const router = useRouter();
 
+  const weekDays = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+  const timeSlots = ["7:00 AM", "8:30 AM", "10:00 AM", "11:30 AM", "1:00 PM"];
+
+  const schedule = {
+    Lunes: [
+      "Matemáticas",
+      "Lengua y Literatura",
+      "Receso",
+      "Creciendo en Valores",
+      "AEP",
+    ],
+    Martes: ["EE.FF.", "AEP", "Receso", "Biología", "Ciencias Sociales"],
+    Miércoles: [
+      "Computación",
+      "Lengua y Literatura",
+      "Receso",
+      "Matemáticas",
+      "EE.FF.",
+    ],
+    Jueves: ["Física", "Química", "Receso", "Historia", "Inglés"],
+    Viernes: ["TAC", "Lengua y Literatura", "Receso", "Matemáticas", "Física"],
+  };
+
   const teachers = [
     {
       name: "Karla Martínez",
@@ -168,6 +191,36 @@ const Home = () => {
           {subjects.map((subject, index) => (
             <SubjectCard key={index} {...subject} />
           ))}
+        </View>
+
+        <View style={styles.container}>
+          <Text style={styles.title}>Horario Semanal</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.table}>
+              <View style={styles.column}>
+                <View style={styles.timeHeader}>
+                  <Text style={styles.timeHeaderText}>Hora</Text>
+                </View>
+                {timeSlots.map((time, index) => (
+                  <View key={index} style={styles.timeCell}>
+                    <Text style={styles.timeText}>{time}</Text>
+                  </View>
+                ))}
+              </View>
+              {weekDays.map((day, index) => (
+                <View key={index} style={styles.column}>
+                  <View style={styles.dayHeader}>
+                    <Text style={styles.dayText}>{day}</Text>
+                  </View>
+                  {schedule[day].map((subject, subIndex) => (
+                    <View key={subIndex} style={styles.cell}>
+                      <Text style={styles.subjectText}>{subject}</Text>
+                    </View>
+                  ))}
+                </View>
+              ))}
+            </View>
+          </ScrollView>
         </View>
       </ScrollView>
     </ScreenWrapper>
@@ -289,5 +342,72 @@ const styles = StyleSheet.create({
   viewSubjectButtonText: {
     color: "white",
     fontSize: 12,
+  },
+
+  container: {
+    marginVertical: hp(2),
+    paddingHorizontal: wp(4),
+  },
+  title: {
+    fontSize: hp(2.5),
+    fontWeight: "bold",
+    marginBottom: hp(2),
+    color: theme.colors.text,
+  },
+  table: {
+    flexDirection: "row",
+  },
+  column: {
+    width: wp(30),
+    marginRight: wp(1),
+  },
+  timeHeader: {
+    backgroundColor: theme.colors.primary,
+    padding: wp(2),
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  timeHeaderText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  dayHeader: {
+    backgroundColor: theme.colors.primary,
+    padding: wp(2),
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  dayText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  cell: {
+    backgroundColor: "white",
+    padding: wp(2),
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    height: hp(8),
+    justifyContent: "center",
+  },
+  timeCell: {
+    backgroundColor: theme.colors.background,
+    padding: wp(2),
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    height: hp(8),
+    justifyContent: "center",
+  },
+  subjectText: {
+    textAlign: "center",
+    color: theme.colors.text,
+    fontSize: hp(1.6),
+  },
+  timeText: {
+    textAlign: "center",
+    color: theme.colors.text,
+    fontWeight: "bold",
+    fontSize: hp(1.6),
   },
 });
