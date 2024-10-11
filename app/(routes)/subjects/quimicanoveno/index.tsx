@@ -91,7 +91,12 @@ export default function index() {
               <Text style={styles.calendarDay}>9</Text>
               <Text style={styles.calendarMonth}>Mayo</Text>
             </View>
-            <Text style={styles.optionText}>Registrar Asistencia del día</Text>
+            <Text
+              style={styles.optionText}
+              onPress={() => router.push("/asistencia")}
+            >
+              Registrar Asistencia del día
+            </Text>
             <Ionicons name="chevron-forward" size={24} color="#4CAF50" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.optionButton}>
