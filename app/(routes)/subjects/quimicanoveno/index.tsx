@@ -58,10 +58,10 @@ export default function index() {
         <Pressable onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </Pressable>
-        <Text style={styles.header}>Ciencias Naturales</Text>
+        <Text style={styles.header}>Química</Text>
 
         <Image
-          source={require("../../../../assets/images/quimica.png")}
+          source={require("../../../../assets/images/asignatura6.jpg")}
           style={styles.image}
           resizeMode="cover"
         />

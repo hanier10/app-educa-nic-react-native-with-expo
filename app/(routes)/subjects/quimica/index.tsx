@@ -61,7 +61,7 @@ export default function index() {
         <Text style={styles.header}>Química</Text>
 
         <Image
-          source={require("../../../../assets/images/quimica.png")}
+          source={require("../../../../assets/images/asignatura6.jpg")}
           style={styles.image}
           resizeMode="cover"
         />
