@@ -51,22 +51,20 @@ export default function index() {
           <Pressable onPress={() => router.back()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="white" />
           </Pressable>
-          <Text style={styles.title}>Lengua y Literatura</Text>
+          <Text style={styles.title}>Biología</Text>
         </View>
         <View style={styles.content}>
           <Image
-            source={require("../../../../assets/images/asignatura1.jpg")}
+            source={require("../../../../assets/images/asignatura5.jpg")}
             style={styles.bookIcon}
           />
           <Text style={styles.description}>
-            El desarrollo de la competencia comunicativa constituye una de las
-            principales capacidades que se demanda a toda persona para
-            desenvolverse en el mundo actual. La comprensión lectora, la
-            producción de textos, la escucha y la expresión oral son habilidades
-            indispensables tanto en la escuela como en la vida laboral. En todas
-            las asignaturas del currículo, los estudiantes utilizan la lectura,
-            escriben textos, escuchan las explicaciones orales y toman apuntes
-            para asegurar la construcción de aprendizajes significativos.
+            La biología es la ciencia que estudia a los seres vivos y los
+            procesos y sistemas relacionados con la vida. Su objetivo es conocer
+            la estructura, función, diversidad, origen, evolución, e
+            interrelaciones de los seres vivos. La biología se considera una
+            ciencia aplicada o fáctica, ya que se ocupa de la realidad y sus
+            hipótesis se adecuan a los hechos
           </Text>
           <View style={styles.teacherInfo}>
             <Image
@@ -147,6 +145,7 @@ const styles = StyleSheet.create({
     height: wp(30),
     alignSelf: "center",
     marginBottom: hp(2),
+    borderRadius: theme.radius.sm,
   },
   description: {
     fontSize: hp(1.8),
@@ -162,6 +161,7 @@ const styles = StyleSheet.create({
     marginLeft: wp(3),
     fontSize: hp(2),
     color: theme.colors.text,
+    fontWeight: "bold",
   },
   button: {
     flexDirection: "row",

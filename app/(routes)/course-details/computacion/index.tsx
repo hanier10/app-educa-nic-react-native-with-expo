@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import ScreenWrapper from "../../../../components/ScreenWrapper";
 import { StatusBar } from "expo-status-bar";
@@ -8,6 +8,7 @@ import { hp, wp } from "../../../../helpers/common";
 import { theme } from "../../../../constants/theme";
 import Avatar from "../../../../components/Avatar";
 import { useAuth } from "../../../../contexts/AuthContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function index() {
   const { user } = useAuth();
@@ -16,8 +17,8 @@ export default function index() {
   return (
     <ScreenWrapper bg="white">
       <StatusBar style="dark" />
-      <View style={styles.header}>
-        <Text style={styles.title}>EducaNic</Text>
+      <View style={styles.headerBar}>
+        <Text style={styles.titleBar}>EducaNic</Text>
         <View style={styles.icons}>
           <Pressable onPress={() => router.push("/notifications")}>
             <Icon
@@ -45,19 +46,82 @@ export default function index() {
           </Pressable>
         </View>
       </View>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Pressable onPress={() => router.back()} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color="white" />
+          </Pressable>
+          <Text style={styles.title}>Computación</Text>
+        </View>
+        <View style={styles.content}>
+          <Image
+            source={require("../../../../assets/images/asignatura2.avif")}
+            style={styles.bookIcon}
+          />
+          <Text style={styles.description}>
+            La asignatura de computación en secundaria tiene como objetivo que
+            los alumnos aprendan a utilizar la computadora y el software de
+            aplicación ofimático. Algunos de los temas que se pueden abordar en
+            la asignatura de computación son: Ciudadanía digital, Análisis de
+            problemas, Algoritmos y programación, Almacenamiento de datos,
+            Arquitectura de computadoras, Redes, Ciberseguridad, Robótica,
+            Inteligencia artificial, Aprendizaje automático.
+          </Text>
+          <View style={styles.teacherInfo}>
+            <Image
+              source={require("../../../../assets/images/docente4.jpeg")}
+              style={styles.teacherImage}
+            />
+            <Text style={styles.teacherName}>Docente: Martha Moraga</Text>
+          </View>
+          <Pressable
+            style={styles.button}
+            // onPress={() => router.push("/grade")}
+          >
+            <Text style={styles.buttonText}>Visualizar Mi Calificación</Text>
+            <Ionicons name="eye" size={24} color="white" />
+          </Pressable>
+          <Pressable
+            style={styles.button}
+            // onPress={() => router.push("/report")}
+          >
+            <Text style={styles.buttonText}>Reportar un Problema</Text>
+            <Ionicons name="warning" size={24} color="white" />
+          </Pressable>
+        </View>
+      </View>
     </ScreenWrapper>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   header: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#6B2E7E",
+    paddingTop: hp(5),
+    paddingBottom: hp(2),
+    paddingHorizontal: wp(4),
+  },
+  backButton: {
+    marginRight: wp(3),
+  },
+  title: {
+    color: "white",
+    fontSize: hp(2.5),
+    fontWeight: "bold",
+  },
+  headerBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 10,
     marginHorizontal: wp(4),
   },
-  title: {
+  titleBar: {
     color: theme.colors.text,
     fontSize: hp(3.2),
     fontWeight: "bold",
@@ -66,5 +130,52 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 18,
+  },
+  content: {
+    flex: 1,
+    padding: wp(4),
+  },
+  teacherImage: {
+    width: hp(5),
+    height: hp(5),
+    borderRadius: hp(2.5),
+    marginRight: wp(3),
+  },
+  bookIcon: {
+    width: wp(30),
+    height: wp(30),
+    alignSelf: "center",
+    marginBottom: hp(2),
+    borderRadius: theme.radius.sm,
+  },
+  description: {
+    fontSize: hp(1.8),
+    color: theme.colors.text,
+    marginBottom: hp(2),
+  },
+  teacherInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: hp(3),
+  },
+  teacherName: {
+    marginLeft: wp(3),
+    fontSize: hp(2),
+    color: theme.colors.text,
+    fontWeight: "bold",
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "#6B2E7E",
+    padding: wp(4),
+    borderRadius: theme.radius.sm,
+    marginBottom: hp(2),
+  },
+  buttonText: {
+    color: "white",
+    fontSize: hp(2),
+    fontWeight: "bold",
   },
 });
