@@ -88,8 +88,8 @@ export default function index() {
         <View style={styles.optionsContainer}>
           <TouchableOpacity style={styles.optionButton}>
             <View style={styles.calendarIcon}>
-              <Text style={styles.calendarDay}>9</Text>
-              <Text style={styles.calendarMonth}>Mayo</Text>
+              <Text style={styles.calendarDay}>11</Text>
+              <Text style={styles.calendarMonth}>Octubre</Text>
             </View>
             <Text
               style={styles.optionText}
@@ -103,7 +103,12 @@ export default function index() {
             <View style={styles.gradesIcon}>
               <Ionicons name="document-text" size={24} color="#FFFFFF" />
             </View>
-            <Text style={styles.optionText}>Registrar Calificaciones</Text>
+            <Text
+              style={styles.optionText}
+              onPress={() => router.push("/calificacion")}
+            >
+              Registrar Calificaciones
+            </Text>
             <Ionicons name="chevron-forward" size={24} color="#4CAF50" />
           </TouchableOpacity>
         </View>

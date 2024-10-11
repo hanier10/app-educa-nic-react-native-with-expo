@@ -88,8 +88,8 @@ export default function index() {
         <View style={styles.optionsContainer}>
           <TouchableOpacity style={styles.optionButton}>
             <View style={styles.calendarIcon}>
-              <Text style={styles.calendarDay}>9</Text>
-              <Text style={styles.calendarMonth}>Mayo</Text>
+              <Text style={styles.calendarDay}>11</Text>
+              <Text style={styles.calendarMonth}>Octubre</Text>
             </View>
             <Text
               style={styles.optionText}
