@@ -97,14 +97,29 @@ export default function index() {
             >
               Registrar Asistencia del día
             </Text>
-            <Ionicons name="chevron-forward" size={24} color="#4CAF50" />
+            <Ionicons
+              name="chevron-forward"
+              size={24}
+              color="#4CAF50"
+              onPress={() => router.push("/asistencia")}
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.optionButton}>
             <View style={styles.gradesIcon}>
               <Ionicons name="document-text" size={24} color="#FFFFFF" />
             </View>
-            <Text style={styles.optionText}>Registrar Calificaciones</Text>
-            <Ionicons name="chevron-forward" size={24} color="#4CAF50" />
+            <Text
+              style={styles.optionText}
+              onPress={() => router.push("/calificacion")}
+            >
+              Registrar Calificaciones
+            </Text>
+            <Ionicons
+              name="chevron-forward"
+              size={24}
+              color="#4CAF50"
+              onPress={() => router.push("/calificacion")}
+            />
           </TouchableOpacity>
         </View>
       </ScrollView>

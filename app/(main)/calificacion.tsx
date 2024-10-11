@@ -156,21 +156,24 @@ const students = [
   },
 ];
 
-const StudentItem = ({ name, imageUrl }) => (
-  <View style={styles.studentItem}>
-    <Image source={{ uri: imageUrl }} style={styles.avatar} />
-    <Text style={styles.name}>{name}</Text>
-    <TouchableOpacity style={styles.eyeButton}>
-      <View style={styles.eyeCircle}>
-        <Eye size={20} color="#000" />
-      </View>
-    </TouchableOpacity>
-  </View>
-);
-
 export default function GradeRecorder() {
   const { user } = useAuth();
   const router = useRouter();
+
+  const StudentItem = ({ name, imageUrl }) => (
+    <View style={styles.studentItem}>
+      <Image source={{ uri: imageUrl }} style={styles.avatar} />
+      <Text style={styles.name}>{name}</Text>
+      <TouchableOpacity style={styles.eyeButton}>
+        <Pressable
+          style={styles.eyeCircle}
+          onPress={() => router.push("/ingresarCalificacion")}
+        >
+          <Eye size={20} color="#000" />
+        </Pressable>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <ScreenWrapper bg="white">
