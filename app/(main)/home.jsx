@@ -9,8 +9,6 @@ import Icon from "../../assets/icons";
 import { useRouter } from "expo-router";
 import Avatar from "../../components/Avatar";
 import { StatusBar } from "expo-status-bar";
-import ImageSlider from "../../components/ImageSlider";
-// import Icon from "react-native-vector-icons/FontAwesome";
 
 const Home = () => {
   const { user, setAuth } = useAuth();
@@ -70,7 +68,7 @@ const Home = () => {
         </View>
 
         <View>
-          <ImageSlider />
+          <Text>Hola</Text>
         </View>
       </View>
     </ScreenWrapper>
