@@ -165,7 +165,7 @@ const Home = () => {
 
         {/* Bienvenida */}
         <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeText}>Bienvenido {user?.name}</Text>
+          <Text style={styles.welcomeText}>Bienvenido/a {user?.name}</Text>
         </View>
 
         {/* Home Banner Slider */}

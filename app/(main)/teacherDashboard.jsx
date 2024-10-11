@@ -1,4 +1,12 @@
-import { StyleSheet, Text, View, Button, Alert, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Alert,
+  Pressable,
+  ScrollView,
+} from "react-native";
 import React from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import { useAuth } from "../../contexts/AuthContext";
@@ -9,17 +17,62 @@ import Icon from "../../assets/icons";
 import { useRouter } from "expo-router";
 import Avatar from "../../components/Avatar";
 import { StatusBar } from "expo-status-bar";
+import HomeBannerSlider from "../../components/HomeBannerSlider";
+import SubjectCard from "../../components/SubjectCard";
 
 const Home = () => {
   const { user, setAuth } = useAuth();
   const router = useRouter();
 
+  const subjects = [
+    {
+      subject: "Biología",
+      grade: "Onceavo Grado A",
+      time: "7:00 AM - 8:30 AM",
+      day: "Lunes",
+      color: "#FF6B6B",
+      url: () => router.push("subjects/biologia"),
+    },
+    {
+      subject: "Química",
+      grade: "Onceavo Grado A",
+      time: "10:00 AM - 11:30 AM",
+      day: "Martes",
+      color: "#4ECDC4",
+      url: () => router.push("subjects/quimica"),
+    },
+    {
+      subject: "CC:NN",
+      grade: "Septimo Grado A",
+      time: "9:00 AM - 10:45 AM",
+      day: "Miércoles",
+      color: "#C44D58",
+      url: () => router.push("subjects/ccnnseptimo"),
+    },
+    {
+      subject: "CC:NN",
+      grade: "Noveno Grado A",
+      time: "8:00 AM - 9:45 AM",
+      day: "Jueves",
+      color: "#45B7D1",
+      url: () => router.push("subjects/ccnnoveno"),
+    },
+    {
+      subject: "Química",
+      grade: "Noveno Grado A",
+      time: "8:00 AM - 9:45 AM",
+      day: "Viernes",
+      color: "#FF8C42",
+      url: () => router.push("subjects/quimicanoveno"),
+    },
+  ];
+
   return (
     <ScreenWrapper bg="white">
       <StatusBar style="dark" />
-      <View style={styles.container}>
+      <ScrollView>
         <View style={styles.header}>
-          <Text style={styles.title}>Perfil Docente</Text>
+          <Text style={styles.title}>EducaNic</Text>
           <View style={styles.icons}>
             <Pressable onPress={() => router.push("notifications")}>
               <Icon
@@ -29,7 +82,6 @@ const Home = () => {
                 color={theme.colors.text}
               />
             </Pressable>
-
             <Pressable onPress={() => router.push("newPost")}>
               <Icon
                 name="plus"
@@ -38,7 +90,6 @@ const Home = () => {
                 color={theme.colors.text}
               />
             </Pressable>
-
             <Pressable onPress={() => router.push("profile")}>
               <Avatar
                 uri={user?.image}
@@ -49,8 +100,29 @@ const Home = () => {
             </Pressable>
           </View>
         </View>
-      </View>
-      {/* <Button title="logout" onPress={onLogout} /> */}
+
+        {/* Bienvenida */}
+        <View style={styles.welcomeContainer}>
+          <Text style={styles.welcomeText}>Bienvenido/a {user?.name}</Text>
+        </View>
+
+        <View>
+          <HomeBannerSlider />
+        </View>
+
+        <View style={styles.subjectsContainer}>
+          <Text style={styles.subjectsTitle}>Asignaturas a Impartir</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.subjectsScroll}
+          >
+            {subjects.map((subject, index) => (
+              <SubjectCard key={index} {...subject} />
+            ))}
+          </ScrollView>
+        </View>
+      </ScrollView>
     </ScreenWrapper>
   );
 };
@@ -58,9 +130,7 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  // ... (keep your existing styles)
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -73,43 +143,32 @@ const styles = StyleSheet.create({
     fontSize: hp(3.2),
     fontWeight: theme.fonts.bold,
   },
-  avatarImage: {
-    height: hp(6),
-    width: hp(4.3),
-    borderRadius: theme.radius.sm,
-    borderCurve: "continuous",
-    borderColor: theme.colors.gray,
-    borderWidth: 3,
-  },
   icons: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
     gap: 18,
   },
-  listStyle: {
-    paddingTop: 20,
+
+  subjectsContainer: {
+    marginTop: hp(3),
     paddingHorizontal: wp(4),
   },
-  noPosts: {
-    fontSize: hp(2),
-    textAlign: "center",
+  subjectsTitle: {
+    fontSize: hp(2.5),
+    fontWeight: "bold",
     color: theme.colors.text,
+    marginBottom: hp(2),
   },
-  pill: {
-    position: "absolute",
-    right: -10,
-    top: -4,
-    height: hp(2.2),
-    width: hp(2.2),
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 20,
-    backgroundColor: theme.colors.roseLight,
+  subjectsScroll: {
+    flexGrow: 0,
   },
-  pillText: {
-    color: "white",
-    fontSize: hp(1.2),
-    fontWeight: theme.fonts.bold,
+  welcomeContainer: {
+    paddingHorizontal: wp(4),
+    marginBottom: 10,
+  },
+  welcomeText: {
+    fontSize: hp(3),
+    fontWeight: "bold",
+    color: theme.colors.text,
   },
 });
