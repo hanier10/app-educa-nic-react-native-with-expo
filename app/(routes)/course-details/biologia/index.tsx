@@ -69,7 +69,10 @@ export default function index() {
             para asegurar la construcción de aprendizajes significativos.
           </Text>
           <View style={styles.teacherInfo}>
-            <Avatar uri={user?.image} size={hp(5)} rounded={theme.radius.sm} />
+            <Image
+              source={require("../../../../assets/images/docente1.jpg")}
+              style={styles.teacherImage}
+            />
             <Text style={styles.teacherName}>Docente: Karla Martínez</Text>
           </View>
           <Pressable
@@ -132,6 +135,12 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     padding: wp(4),
+  },
+  teacherImage: {
+    width: hp(5),
+    height: hp(5),
+    borderRadius: hp(2.5),
+    marginRight: wp(3),
   },
   bookIcon: {
     width: wp(30),
