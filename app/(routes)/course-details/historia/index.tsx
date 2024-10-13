@@ -104,7 +104,7 @@ export default function Index() {
             </Text>
             <View style={styles.teacherInfo}>
               <Image
-                source={require("../../../../assets/images/defaultUser.png")}
+                source={require("../../../../assets/images/defaultUser.jpg")}
                 style={styles.teacherImage}
               />
               {/* <Text style={styles.teacherName}>Docente: Martha Moraga</Text> */}
