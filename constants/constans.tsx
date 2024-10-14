@@ -25,7 +25,7 @@
 
 export const bannerData: BannerDataTypes[] = [
   {
-    bannerImageUrl: require("../assets/banner/1.jpg"),
+    bannerImageUrl: require("../assets/banner/11.jpg"),
   },
   {
     bannerImageUrl: require("../assets/banner/2.webp"),

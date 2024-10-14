@@ -24,7 +24,7 @@ const MainLayout = () => {
       if (session) {
         setAuth(session?.user);
         updateUserData(session?.user, session?.user?.email);
-        router.replace("/home"); //cambiar
+        router.replace("/teacherDashboard"); //cambiar
       } else {
         setAuth(null);
         router.replace("/welcome");

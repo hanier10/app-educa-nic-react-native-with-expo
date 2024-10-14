@@ -10,16 +10,16 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ChevronRight } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import { StatusBar } from "expo-status-bar";
 import Icon from "@/assets/icons";
 import { hp, wp } from "@/helpers/common";
 import { theme } from "@/constants/theme";
 import Avatar from "@/components/Avatar";
+import { supabase } from "@/lib/supabase";
 
 interface Grade {
   corte: string;
@@ -29,23 +29,33 @@ interface Grade {
 export default function StudentGradeRecorder() {
   const { user } = useAuth();
   const router = useRouter();
+  const { studentId, studentName, studentImage } = useLocalSearchParams();
 
   const [grades, setGrades] = useState<Grade[]>([]);
   const [currentGrade, setCurrentGrade] = useState("");
   const [editingCorte, setEditingCorte] = useState("");
 
   useEffect(() => {
-    loadGrades();
+    fetchGrades();
   }, []);
 
-  const loadGrades = async () => {
-    try {
-      const savedGrades = await AsyncStorage.getItem("studentGrades");
-      if (savedGrades !== null) {
-        setGrades(JSON.parse(savedGrades));
-      }
-    } catch (error) {
-      console.error("Error loading grades:", error);
+  const fetchGrades = async () => {
+    const { data, error } = await supabase
+      .from("estudiantes")
+      .select("nota1, nota2, nota3, nota4")
+      .eq("id", studentId)
+      .single();
+
+    if (error) {
+      console.error("Error fetching grades:", error);
+    } else {
+      const fetchedGrades: Grade[] = [
+        { corte: "1", grade: data.nota1?.toString() || "" },
+        { corte: "2", grade: data.nota2?.toString() || "" },
+        { corte: "3", grade: data.nota3?.toString() || "" },
+        { corte: "4", grade: data.nota4?.toString() || "" },
+      ];
+      setGrades(fetchedGrades);
     }
   };
 
@@ -54,19 +64,24 @@ export default function StudentGradeRecorder() {
       Alert.alert("Error", "Por favor ingrese una calificación");
       return;
     }
-    const newGrades = [
-      ...grades.filter((g) => g.corte !== corte),
-      { corte, grade: currentGrade },
-    ];
-    setGrades(newGrades);
-    try {
-      await AsyncStorage.setItem("studentGrades", JSON.stringify(newGrades));
+
+    const gradeField = `nota${corte}`;
+    const { error } = await supabase
+      .from("estudiantes")
+      .update({ [gradeField]: parseFloat(currentGrade) })
+      .eq("id", studentId);
+
+    if (error) {
+      console.error("Error saving grade:", error);
+      Alert.alert("Error", "No se pudo guardar la calificación");
+    } else {
+      const newGrades = grades.map((g) =>
+        g.corte === corte ? { ...g, grade: currentGrade } : g
+      );
+      setGrades(newGrades);
       setCurrentGrade("");
       setEditingCorte("");
       Alert.alert("Éxito", "Calificación guardada correctamente");
-    } catch (error) {
-      console.error("Error saving grade:", error);
-      Alert.alert("Error", "No se pudo guardar la calificación");
     }
   };
 
@@ -136,17 +151,16 @@ export default function StudentGradeRecorder() {
 
       <ScrollView style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Sobre el Estudiante</Text>
-          <Image />
-          <Text style={styles.studentName}></Text>
+          <Text style={styles.headerTitle}>Calificaciones del Estudiante</Text>
         </View>
         <View style={styles.profileImageContainer}>
           <Image
-            source={require("../../assets/images/lasalle_logo.jpg")}
-            style={styles.image}
+            source={{ uri: studentImage as string }}
+            style={styles.profileImage}
             resizeMode="cover"
           />
         </View>
+        <Text style={styles.studentName}>{studentName as string}</Text>
         {cortes.map((corte) => (
           <View key={corte.id}>
             <TouchableOpacity
@@ -177,6 +191,16 @@ export default function StudentGradeRecorder() {
 }
 
 const styles = StyleSheet.create({
+  picker: {
+    height: 50,
+    width: "100%",
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+  },
+
   image: {
     width: wp(50),
     height: wp(50),
@@ -223,11 +247,6 @@ const styles = StyleSheet.create({
   profileImageContainer: {
     alignItems: "center",
     marginBottom: 20,
-  },
-  profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
   },
   gradeOption: {
     flexDirection: "row",
