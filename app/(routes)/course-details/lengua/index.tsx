@@ -88,7 +88,9 @@ export default function Index() {
           </View>
           <View style={styles.content}>
             <Image
-              source={require("../../../../assets/images/asignatura1.jpg")}
+              source={{
+                uri: "https://xlljrtxdeirlipgxfsnr.supabase.co/storage/v1/object/public/uploads/docentes/docente5.jpeg",
+              }}
               style={styles.bookIcon}
             />
             <Text style={styles.description}>

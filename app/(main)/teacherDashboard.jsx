@@ -27,7 +27,7 @@ const Home = () => {
   const subjects = [
     {
       subject: "Biología",
-      grade: "Onceavo Grado A",
+      grade: "Undécimo Grado A",
       time: "7:00 AM - 8:30 AM",
       day: "Lunes",
       color: "#FF6B6B",
@@ -35,7 +35,7 @@ const Home = () => {
     },
     {
       subject: "Química",
-      grade: "Onceavo Grado A",
+      grade: "Undécimo Grado A",
       time: "10:00 AM - 11:30 AM",
       day: "Martes",
       color: "#4ECDC4",

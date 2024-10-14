@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -18,9 +18,53 @@ import { theme } from "@/constants/theme";
 import Avatar from "@/components/Avatar";
 import { useAuth } from "@/contexts/AuthContext";
 
-export default function index() {
+export default function Index() {
   const { user } = useAuth();
   const router = useRouter();
+  const [activeTab, setActiveTab] = useState("Opciones");
+
+  const renderContent = () => {
+    if (activeTab === "Opciones") {
+      return (
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity
+            style={styles.optionButton}
+            onPress={() => router.push("/asistencia")}
+          >
+            <View style={styles.calendarIcon}>
+              <Text style={styles.calendarDay}>15</Text>
+              <Text style={styles.calendarMonth}>Octubre</Text>
+            </View>
+            <Text style={styles.optionText}>Registrar Asistencia del día</Text>
+            <Ionicons name="chevron-forward" size={24} color="#4CAF50" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.optionButton}
+            onPress={() => router.push("/calificacion")}
+          >
+            <View style={styles.gradesIcon}>
+              <Ionicons name="document-text" size={24} color="#FFFFFF" />
+            </View>
+            <Text style={styles.optionText}>Registrar Calificaciones</Text>
+            <Ionicons name="chevron-forward" size={24} color="#4CAF50" />
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.descriptionText}>
+            La asignatura de Biología es fundamental para comprender la vida y
+            los sistemas naturales. En este curso, los estudiantes explorarán
+            temas como la estructura celular, la genética, la evolución, la
+            ecología y la fisiología humana. A través de experimentos prácticos
+            y discusiones en clase, desarrollarán habilidades de pensamiento
+            crítico y método científico.
+          </Text>
+        </View>
+      );
+    }
+  };
 
   return (
     <ScreenWrapper bg="white">
@@ -67,7 +111,7 @@ export default function index() {
         />
 
         <View style={styles.detailsContainer}>
-          <Text style={styles.grade}>Onceavo Grado A</Text>
+          <Text style={styles.grade}>Undécimo Grado</Text>
           <Text style={styles.timeDay}>
             7:00 AM - 8:30 AM • Lunes{" "}
             <Ionicons name="star" size={16} color="#FFD700" /> 30 Estudiantes
@@ -75,53 +119,37 @@ export default function index() {
         </View>
 
         <View style={styles.tabContainer}>
-          <TouchableOpacity style={styles.tabButton}>
-            <Text style={styles.tabButtonTextActive}>Opciones</Text>
+          <TouchableOpacity
+            style={styles.tabButton}
+            onPress={() => setActiveTab("Opciones")}
+          >
+            <Text
+              style={
+                activeTab === "Opciones"
+                  ? styles.tabButtonTextActive
+                  : styles.tabButtonTextInactive
+              }
+            >
+              Opciones
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.tabButton}>
-            <Text style={styles.tabButtonTextInactive}>
+          <TouchableOpacity
+            style={styles.tabButton}
+            onPress={() => setActiveTab("Descripción Asignatura")}
+          >
+            <Text
+              style={
+                activeTab === "Descripción Asignatura"
+                  ? styles.tabButtonTextActive
+                  : styles.tabButtonTextInactive
+              }
+            >
               Descripción Asignatura
             </Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.optionsContainer}>
-          <TouchableOpacity style={styles.optionButton}>
-            <View style={styles.calendarIcon}>
-              <Text style={styles.calendarDay}>11</Text>
-              <Text style={styles.calendarMonth}>Octubre</Text>
-            </View>
-            <Text
-              style={styles.optionText}
-              onPress={() => router.push("/asistencia")}
-            >
-              Registrar Asistencia del día
-            </Text>
-            <Ionicons
-              name="chevron-forward"
-              size={24}
-              color="#4CAF50"
-              onPress={() => router.push("/asistencia")}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton}>
-            <View style={styles.gradesIcon}>
-              <Ionicons name="document-text" size={24} color="#FFFFFF" />
-            </View>
-            <Text
-              style={styles.optionText}
-              onPress={() => router.push("/calificacion")}
-            >
-              Registrar Calificaciones
-            </Text>
-            <Ionicons
-              name="chevron-forward"
-              size={24}
-              color="#4CAF50"
-              onPress={() => router.push("/calificacion")}
-            />
-          </TouchableOpacity>
-        </View>
+        {renderContent()}
       </ScrollView>
     </ScreenWrapper>
   );
@@ -233,5 +261,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 16,
     fontSize: 16,
+  },
+  descriptionContainer: {
+    padding: 16,
+  },
+  descriptionText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#333333",
   },
 });

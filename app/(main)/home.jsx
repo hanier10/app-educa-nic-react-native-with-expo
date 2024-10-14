@@ -80,28 +80,28 @@ const Home = () => {
     {
       name: "Karla Martínez",
       image:
-        "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5KJIUUU6FWXGRDI672TKQCKBN56%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2OTEyMDAifQ.E-ioQhTS0f8MrWoC_skt278cwoAb6l6uieywG17_Nf09tB5OYK9p0MGTMNlaJXgi16X5g4O_QYN7_IqaonpITasrIFUe78sjCggd0FcxkXpXb7xPZkq8JwIqG7Y-dDir2YAjAlIox6ku05WaxJ2o6Zr75V59t4I2LAE44VK12rwFolSF5wfPeDmErTnjqNY_r2nXnFu1uOIBGPmQWm76jZHOnPaPhfcFYllEsdedZSCFGvv02QLgh28N9Z0yCy8AhwZwuIHB5p-k89h9Nl5U2IrnkoqQeOHCjt2fdgIkZiskFeMTcbKm-_yVRJMGbDzVgVdVHrSTIqaYVIj1LQ5W7svJ8nWVPEaqzjwkyD_xcdk.ajPeuv0TwzA9TUy0pyBZdIeLX6ZWzSP2ilx_BpvFoBg%26version%3DPublished&cb=63864218070&encodeFailures=1&width=516&height=528",
+        "https://xlljrtxdeirlipgxfsnr.supabase.co/storage/v1/object/public/uploads/docentes/docente1.jpg",
       subject: "Biología",
       url: () => router.push("course-details/biologia"),
     },
     {
       name: "Braulio González",
       image:
-        "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5KCBKDG4UFHW5B3ARSWPH2DJ6PU%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2OTEyMDAifQ.oiWkeSXeovf20bF1m1xl9OFSGwHk7CK_WPZYkHBEeVgR_DXpGmJ5T4tN-o8k41gFdmU9oVTtX50W5S-1_12eR6eFFXGLKd3gpSG4wNFGWh9IETKEuLJfkrrNocAoMHx6bmlOGXLX1aw-oy9v91DqSiOF1WLe7qvmqkbz9m3MUKsktGJWSlEH6GPuA4f4NShz40eggFshFvyzgQLhm5W_wvCFcAPI_9Y8UVvODw53KEJV3gnrBOW7K6eAaV--stM_lylyjzG5UMbvyHiURDziZxkZIEiT5Wj0dBD59ItcNX9JzxtyXt10jQ6tYRWg43vTDONwta_qWuKVQJTDdXhaTm7IG3ECnt70g2Z5HO6_r4U.oMe7q5S6aqpsFC24wQ8hXyq5B0nMVCI29qg8BReI69s%26version%3DPublished&cb=63864218071&encodeFailures=1&width=240&height=240",
+        "https://xlljrtxdeirlipgxfsnr.supabase.co/storage/v1/object/public/uploads/docentes/docente2.jpg?t=2024-10-14T08%3A58%3A18.803Z",
       subject: "Matemáticas",
       url: () => router.push("course-details/matematicas"),
     },
     {
       name: "Marlon Calero",
       image:
-        "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpeg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5MYBIFXJOXPQJC3VRRESN2UE2XA%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2OTEyMDAifQ.sU5_GQn-riP97GafXdR9Llf6RrU391OCzilPPuxsrUZ90lsH9zQV0NejBVAVl7iVd8CMU6E7AKtssUupBldwlMEE2HURvjsfZ0LmSm4eU_GIB00dL-Pu9xADC7M-2py7oApFnfrmO7PU8fSluEI2J-iMeChLSvH48-qX2ZX3UlOSeLbeVCwStD3gxa2YbT2KJOFjWhUgkPbBNETeQV_pKoCLW2Tjy22rdQ1kSlsR2FvhnEOAXFXaohgXZwUXhvy-cmj54Fv2hsBIC-AzUiwHoOB3-7hbRvG7Q5ZaWRw_PgLwXXx-LJLL-vhlbVQauTkKLqrQOaxhPs3Wx19RetVjBxAO57i9B2e3asXRm04gnZQ.RL4mHO5ua_MoXY2b0yX5i05dWgktx-8tSujAhEl64ac%26version%3DPublished&cb=63864218070&encodeFailures=1&width=175&height=174",
+        "https://xlljrtxdeirlipgxfsnr.supabase.co/storage/v1/object/public/uploads/docentes/docente3.jpeg",
       subject: "Física",
       url: () => router.push("course-details/fisica"),
     },
     {
       name: "Martha Moraga",
       image:
-        "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpeg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5ORVJBBQDVTQREYOLYH77OVROLF%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2OTEyMDAifQ.dj5VnfFhH-tJviDx487FAyCLxn5U2f7i_wUEQGEC_jh5D4wnPOWI3VgMj6xYW_JhmeJxJ4zwgyB898_U6JMNgsmNoNdUC_ilvCbs7UCW2jTDrQf-IB7xdQI8zNjNDnse2PKPMMJdz_6rJSAVexwkEG0fiE8KaVtEu9Tl6eB9otIVH2Q4sPHyse-sA5EoRQLV_rhTqZqB7pJJgjXn-08O_SSvfAnL3T-sYfW1SLFI5fP2_cUwxGbtmGDR3UFF6T-6NYkUPsb0qk3lQOR3_ge-kNvX0cLp8pBXo2ejua2KZL0NW9ShnmaNIeGBsfHRfzgWfBtbCQRE8i6u6xa-Lr1vULUOzBdOi7L8uViStR_1Bxg.FmyPLJDbUB82sEGf-oTCyIrAD0nswfaIqt0s1XWhwko%26version%3DPublished&cb=63864218308&encodeFailures=1&width=215&height=188",
+        "https://xlljrtxdeirlipgxfsnr.supabase.co/storage/v1/object/public/uploads/docentes/docente4.jpeg",
       subject: "Computación",
       url: () => router.push("course-details/computacion"),
     },
