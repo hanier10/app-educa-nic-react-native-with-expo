@@ -1,4 +1,12 @@
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  StatusBar,
+} from "react-native";
 import React from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import { useAuth } from "../../contexts/AuthContext";
@@ -37,17 +45,22 @@ const Profile = () => {
     ]);
   };
   return (
-    <ScreenWrapper bg="white">
-      <UserHeader user={user} router={router} handleLogout={handleLogout} />
-    </ScreenWrapper>
+    <ImageBackground
+      source={require("../../assets/images/fondo2.jpg")}
+      style={styles.backgroundImage}
+      imageStyle={{ opacity: 0.1 }}
+    >
+      <StatusBar translucent backgroundColor="transparent" />
+      <ScreenWrapper bg="transparent">
+        <UserHeader user={user} router={router} handleLogout={handleLogout} />
+      </ScreenWrapper>
+    </ImageBackground>
   );
 };
 
 const UserHeader = ({ user, router, handleLogout }) => {
   return (
-    <View
-      style={{ flex: 1, backgroundColor: "white", paddingHorizontal: wp(4) }}
-    >
+    <View style={styles.container}>
       <View>
         <Header title="Mi Perfil" mb={30} />
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -102,8 +115,14 @@ const UserHeader = ({ user, router, handleLogout }) => {
 export default Profile;
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
   container: {
     flex: 1,
+    paddingHorizontal: wp(4),
   },
   headerContainer: {
     marginHorizontal: wp(4),
