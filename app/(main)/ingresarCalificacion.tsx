@@ -44,6 +44,7 @@ export default function StudentGradeRecorder() {
       .from("estudiantes")
       .select("nota1, nota2, nota3, nota4")
       .eq("id", studentId)
+      .order("name", { ascending: false })
       .single();
 
     if (error) {

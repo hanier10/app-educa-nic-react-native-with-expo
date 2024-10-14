@@ -1,15 +1,13 @@
-"use strict";
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
-  ScrollView,
   Pressable,
+  Image,
+  TouchableOpacity,
 } from "react-native";
-import AttendanceItem from "@/components/AttendanceItem";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "expo-router";
 import ScreenWrapper from "@/components/ScreenWrapper";
@@ -18,147 +16,85 @@ import Icon from "@/assets/icons";
 import { hp, wp } from "@/helpers/common";
 import { theme } from "@/constants/theme";
 import Avatar from "@/components/Avatar";
+import { supabase } from "@/lib/supabase";
+import { ThumbsUp } from "lucide-react-native";
 
-const students = [
-  {
-    id: "1",
-    name: "Gilmer José Jirón Gaitán",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-  {
-    id: "2",
-    name: "Solimar Estrella Luna Zavala",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-  {
-    id: "3",
-    name: "Gersan Jalissat Martínez Bravo",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-  {
-    id: "4",
-    name: "Shellsy García Chamorro",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-  {
-    id: "5",
-    name: "Stephany Soleidy Reyes Moraga",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-  {
-    id: "6",
-    name: "William Daniel Martínez Prado",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
+interface Student {
+  id: string;
+  name: string;
+  imageurl: string;
+  asistencia: boolean;
+}
 
-  {
-    id: "7",
-    name: "Emely Esther  Martínez Guevara",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "8",
-    name: "Emeral Jamil  González Emaldi ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "9",
-    name: "Emily Fabiola  Acevedo Gática",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "10",
-    name: "Francis Marina  Rodríguez Monge",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "11",
-    name: "Frania Dayanara  Artola Bermúdez ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "12",
-    name: "Leyssi Daviana  Rivas Obregón  ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "13",
-    name: "Lilianna Darieska Aragón Coronado ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "14",
-    name: "Lohendys Catalina  Arróliga Hernández  ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "15",
-    name: "Luci Mileyding   García Morales  ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "16",
-    name: "María Fernanda  González Fernández  ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "17",
-    name: "Madison Adilia   Báez Laguna ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "18",
-    name: "Siadeck Camila  Izaguirrez Pineda",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "19",
-    name: "Sofía Valentina Rodríguez Calero ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-
-  {
-    id: "20",
-    name: "Stephany Soleidy  Reyes Moraga ",
-    imageUrl:
-      "https://westus31-mediap.svc.ms/transform/thumbnail?provider=spo&farmid=193376&inputFormat=jpg&cs=MDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDQ4MTcxMGE0fFNQTw&docid=https%3A%2F%2Fmy.microsoftpersonalcontent.com%2F_api%2Fv2.0%2Fdrives%2Fb!kA0SSpupX0CCbpmuRSQdMhX-v-56gKZPtyHlXUhFRWbQnQ1_LP7SSI6vxWWGGLJf%2Fitems%2F015LOKC5NMWSM4LXGOO5EJMKTF2DK52KI3%3Ftempauth%3Dv1e.eyJzaXRlaWQiOiI0YTEyMGQ5MC1hOTliLTQwNWYtODI2ZS05OWFlNDUyNDFkMzIiLCJhcHBpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDA0ODE3MTBhNCIsImF1ZCI6IjAwMDAwMDAzLTAwMDAtMGZmMS1jZTAwLTAwMDAwMDAwMDAwMC9teS5taWNyb3NvZnRwZXJzb25hbGNvbnRlbnQuY29tQDkxODgwNDBkLTZjNjctNGM1Yi1iMTEyLTM2YTMwNGI2NmRhZCIsImV4cCI6IjE3Mjg2ODA0MDAifQ.n8CPyQHZyUqoaXo3OHBpCSHmPrrNg63wjAzgg-tnqjEW-kHcHT06eciccjVp-kGZmUBqqdzP90CFAw3oZedUJoYE6U97ldFQvMGriCGqHUZw_b2ZGg4WEowqJT7gpiesq1UqhCPYQGQ0GAuBtWzLt2Fzd-tzWF6v7c63-SE7FF--o0k2u_aHisObAAESbOEkj3L_kBgUFIUJMUPfdqhfVRO18SqWLmF9bXkx8WuL3RW8vWBtFg1AGQmGp9zxr2hH0YwwdzmELK9ooBkDv2pPiEkQVPCqL_L2-x07WUH-59SchBF4MOUzfqwYfPvNmz2jnf7CsfI3mDOwJzzj1SJVvPBVhwTu3_2olXzzXYLXcKg.d4gvfWrPjqmBJsdqASRn2DX0t8zO3KlURgnQx4sUqw8%26version%3DPublished&cb=63864261474&encodeFailures=1&width=183&height=211",
-  },
-];
+const AttendanceItem = ({
+  student,
+  onToggleAttendance,
+}: {
+  student: Student;
+  onToggleAttendance: (id: string) => void;
+}) => (
+  <View style={styles.studentItem}>
+    <Image source={{ uri: student.imageurl }} style={styles.avatar} />
+    <Text style={styles.name}>{student.name}</Text>
+    <TouchableOpacity onPress={() => onToggleAttendance(student.id)}>
+      <View
+        style={[
+          styles.attendanceButton,
+          student.asistencia ? styles.attendanceButtonActive : {},
+        ]}
+      >
+        <ThumbsUp
+          size={24}
+          color={student.asistencia ? "#ffffff" : "#000000"}
+        />
+      </View>
+    </TouchableOpacity>
+  </View>
+);
 
 export default function AttendanceList() {
   const { user } = useAuth();
   const router = useRouter();
+  const [students, setStudents] = useState<Student[]>([]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, []);
+
+  const fetchStudents = async () => {
+    const { data, error } = await supabase
+      .from("estudiantes")
+      .select("id, name, imageurl, asistencia");
+
+    if (error) {
+      console.error("Error fetching students:", error);
+    } else {
+      setStudents(data || []);
+    }
+  };
+
+  const toggleAttendance = async (id: string) => {
+    const studentToUpdate = students.find((s) => s.id === id);
+    if (!studentToUpdate) return;
+
+    const newAttendanceStatus = !studentToUpdate.asistencia;
+
+    const { error } = await supabase
+      .from("estudiantes")
+      .update({ asistencia: newAttendanceStatus })
+      .order("name", { ascending: true })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating attendance:", error);
+    } else {
+      setStudents(
+        students.map((s) =>
+          s.id === id ? { ...s, asistencia: newAttendanceStatus } : s
+        )
+      );
+    }
+  };
 
   return (
     <ScreenWrapper bg="white">
@@ -195,11 +131,19 @@ export default function AttendanceList() {
       </View>
       <View style={styles.container}>
         <Text style={styles.header}>Registro Asistencia del día</Text>
-        <Text style={styles.date}>11 Octubre</Text>
+        <Text style={styles.date}>
+          {new Date().toLocaleDateString("es-ES", {
+            day: "numeric",
+            month: "long",
+          })}
+        </Text>
         <FlatList
           data={students}
           renderItem={({ item }) => (
-            <AttendanceItem name={item.name} imageUrl={item.imageUrl} />
+            <AttendanceItem
+              student={item}
+              onToggleAttendance={toggleAttendance}
+            />
           )}
           keyExtractor={(item) => item.id}
         />
@@ -226,10 +170,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 18,
   },
-  containerTitle: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-  },
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
@@ -246,5 +186,30 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
     color: "#757575",
+  },
+  studentItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  name: {
+    flex: 1,
+    fontSize: 16,
+  },
+  attendanceButton: {
+    backgroundColor: "#e0e0e0",
+    padding: 10,
+    borderRadius: 20,
+  },
+  attendanceButtonActive: {
+    backgroundColor: "#4caf50",
   },
 });
