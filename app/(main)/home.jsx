@@ -1,3 +1,4 @@
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -6,8 +7,8 @@ import {
   Pressable,
   TouchableOpacity,
   Image,
+  ImageBackground,
 } from "react-native";
-import React from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import { useAuth } from "../../contexts/AuthContext";
 import { supabase } from "../../lib/supabase";
@@ -20,6 +21,7 @@ import { StatusBar } from "expo-status-bar";
 import HomeBannerSlider from "../../components/HomeBannerSlider";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
 const TeacherCard = ({ name, image, subject, url }) => (
   <View style={styles.teacherCard}>
@@ -129,119 +131,134 @@ const Home = () => {
   ];
 
   return (
-    <ScreenWrapper bg="white">
-      <StatusBar style="dark" />
-      <ScrollView>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>EducaNic</Text>
-          <View style={styles.icons}>
-            <Pressable onPress={() => router.push("notifications")}>
-              <Icon
-                name="heart"
-                size={hp(3)}
-                strokeWidth={2}
-                color={theme.colors.text}
-              />
-            </Pressable>
-            <Pressable onPress={() => router.push("newPost")}>
-              <Icon
-                name="plus"
-                size={hp(3)}
-                strokeWidth={2}
-                color={theme.colors.text}
-              />
-            </Pressable>
-            <Pressable onPress={() => router.push("profile")}>
-              <Avatar
-                uri={user?.image}
-                size={hp(4.3)}
-                rounded={theme.radius.sm}
-                style={{ borderWidth: 2 }}
-              />
-            </Pressable>
+    <ImageBackground
+      source={require("../../assets/images/fondo2.jpg")}
+      style={styles.backgroundImage}
+      imageStyle={{ opacity: 0.1 }}
+    >
+      {/* <LinearGradient
+        colors={["#1188E4", "rgba(0,0,255,0.6)"]}
+        style={styles.gradient}
+      > */}
+      <ScreenWrapper>
+        <StatusBar style="dark" />
+        <ScrollView>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={[styles.title, styles.lightText]}>EducaNic</Text>
+            <View style={styles.icons}>
+              <Pressable onPress={() => router.push("notifications")}>
+                <Icon name="heart" size={hp(3)} strokeWidth={2} color="dark" />
+              </Pressable>
+              <Pressable onPress={() => router.push("newPost")}>
+                <Icon name="plus" size={hp(3)} strokeWidth={2} color="dark" />
+              </Pressable>
+              <Pressable onPress={() => router.push("profile")}>
+                <Avatar
+                  uri={user?.image}
+                  size={hp(4.3)}
+                  rounded={theme.radius.sm}
+                  style={{ borderWidth: 2, borderColor: "white" }}
+                />
+              </Pressable>
+            </View>
           </View>
-        </View>
 
-        {/* Bienvenida */}
-        <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeText}>Bienvenido/a {user?.name}</Text>
-        </View>
+          {/* Bienvenida */}
+          <View style={styles.welcomeContainer}>
+            <Text style={[styles.welcomeText, styles.lightText]}>
+              Bienvenido/a {user?.name}
+            </Text>
+          </View>
 
-        {/* Home Banner Slider */}
-        <View>
-          <HomeBannerSlider />
-        </View>
+          {/* Home Banner Slider */}
+          <View>
+            <HomeBannerSlider />
+          </View>
 
-        {/* Mis Docentes */}
-        <View style={styles.headerSection}>
-          <Text style={styles.headerTitle}>Mis Docentes</Text>
-          <TouchableOpacity>
-            <Text style={styles.viewAllText}>Ver Todos</Text>
-          </TouchableOpacity>
-        </View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.teachersContainer}
-        >
-          {teachers.map((teacher, index) => (
-            <TeacherCard key={index} {...teacher} />
-          ))}
-        </ScrollView>
+          {/* Mis Docentes */}
+          <View style={styles.headerSection}>
+            <Text style={[styles.headerTitle, styles.lightText]}>
+              Mis Docentes
+            </Text>
+            <TouchableOpacity>
+              <Text style={[styles.viewAllText, styles.lightText]}>
+                Ver Todos
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.teachersContainer}
+          >
+            {teachers.map((teacher, index) => (
+              <TeacherCard key={index} {...teacher} />
+            ))}
+          </ScrollView>
 
-        {/* Mis Asignaturas */}
-        <View style={styles.headerSection}>
-          <Text style={styles.headerTitle}>
-            Asignaturas Vistas Recientemente
-          </Text>
-          {/* <TouchableOpacity>
-            <Text style={styles.viewAllText}>Ver todas</Text>
-          </TouchableOpacity> */}
-        </View>
-        <View style={styles.subjectsContainer}>
-          {subjects.map((subject, index) => (
-            <SubjectCard key={index} {...subject} />
-          ))}
-        </View>
+          {/* Mis Asignaturas */}
+          <View style={styles.headerSection}>
+            <Text style={[styles.headerTitle, styles.lightText]}>
+              Asignaturas Vistas Recientemente
+            </Text>
+          </View>
+          <View style={styles.subjectsContainer}>
+            {subjects.map((subject, index) => (
+              <SubjectCard key={index} {...subject} />
+            ))}
+          </View>
 
-        <View style={styles.container}>
-          <Text style={styles.title}>Horario Semanal</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View style={styles.table}>
-              <View style={styles.column}>
-                <View style={styles.timeHeader}>
-                  <Text style={styles.timeHeaderText}>Hora</Text>
-                </View>
-                {timeSlots.map((time, index) => (
-                  <View key={index} style={styles.timeCell}>
-                    <Text style={styles.timeText}>{time}</Text>
+          <View style={styles.container}>
+            <Text style={styles.title}>Horario Semanal</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View style={styles.table}>
+                <View style={styles.column}>
+                  <View style={styles.timeHeader}>
+                    <Text style={styles.timeHeaderText}>Hora</Text>
                   </View>
-                ))}
-              </View>
-              {weekDays.map((day, index) => (
-                <View key={index} style={styles.column}>
-                  <View style={styles.dayHeader}>
-                    <Text style={styles.dayText}>{day}</Text>
-                  </View>
-                  {schedule[day].map((subject, subIndex) => (
-                    <View key={subIndex} style={styles.cell}>
-                      <Text style={styles.subjectText}>{subject}</Text>
+                  {timeSlots.map((time, index) => (
+                    <View key={index} style={styles.timeCell}>
+                      <Text style={styles.timeText}>{time}</Text>
                     </View>
                   ))}
                 </View>
-              ))}
-            </View>
-          </ScrollView>
-        </View>
-      </ScrollView>
-    </ScreenWrapper>
+                {weekDays.map((day, index) => (
+                  <View key={index} style={styles.column}>
+                    <View style={styles.dayHeader}>
+                      <Text style={styles.dayText}>{day}</Text>
+                    </View>
+                    {schedule[day].map((subject, subIndex) => (
+                      <View key={subIndex} style={styles.cell}>
+                        <Text style={styles.subjectText}>{subject}</Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        </ScrollView>
+      </ScreenWrapper>
+      {/* </LinearGradient> */}
+    </ImageBackground>
   );
 };
 
 export default Home;
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
+  gradient: {
+    flex: 1,
+  },
+  lightText: {
+    color: "dark",
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
