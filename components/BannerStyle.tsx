@@ -10,9 +10,11 @@ export const styles = StyleSheet.create({
     marginTop: 12,
     height: hp("35%"),
     marginHorizontal: 16,
+    // overflow: "hidden",
+    borderRadius: 10,
   },
 
-  slide: { flex: 1 },
+  slide: { flex: 1, borderRadius: 10, overflow: "hidden" },
 
   background: {
     width: "100%",

@@ -10,7 +10,7 @@ export default function HomeBannerSlider() {
         dotStyle={styles.dot}
         activeDotStyle={styles.activeDot}
         autoplay={true}
-        autoplayTimeout={5}
+        autoplayTimeout={2}
       >
         {bannerData.map((item: BannerDataTypes, index: number) => (
           <View key={index} style={styles.slide}>
