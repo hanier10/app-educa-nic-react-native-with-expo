@@ -10,7 +10,7 @@ import {
   Alert,
   Pressable,
 } from "react-native";
-import { ChevronRight } from "lucide-react-native";
+import { ChevronRight, Trash2 } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import ScreenWrapper from "@/components/ScreenWrapper";
@@ -83,6 +83,38 @@ export default function StudentGradeRecorder() {
       setEditingCorte("");
       Alert.alert("Éxito", "Calificación guardada correctamente");
     }
+  };
+
+  const deleteGrade = async (corte: string) => {
+    Alert.alert(
+      "Confirmar eliminación",
+      "¿Está seguro que desea eliminar esta calificación?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: async () => {
+            const gradeField = `nota${corte}`;
+            const { error } = await supabase
+              .from("estudiantes")
+              .update({ [gradeField]: null })
+              .eq("id", studentId);
+
+            if (error) {
+              console.error("Error deleting grade:", error);
+              Alert.alert("Error", "No se pudo eliminar la calificación");
+            } else {
+              const newGrades = grades.map((g) =>
+                g.corte === corte ? { ...g, grade: "" } : g
+              );
+              setGrades(newGrades);
+              Alert.alert("Éxito", "Calificación eliminada correctamente");
+            }
+          },
+        },
+      ]
+    );
   };
 
   const renderGradeInput = (corte: string) => {
@@ -178,10 +210,19 @@ export default function StudentGradeRecorder() {
               <ChevronRight color="#000" size={24} />
             </TouchableOpacity>
             {renderGradeInput(corte.id)}
-            {grades.find((g) => g.corte === corte.id) && (
-              <Text style={styles.savedGrade}>
-                Calificación: {grades.find((g) => g.corte === corte.id)?.grade}
-              </Text>
+            {grades.find((g) => g.corte === corte.id)?.grade && (
+              <View style={styles.savedGradeContainer}>
+                <Text style={styles.savedGrade}>
+                  Calificación:{" "}
+                  {grades.find((g) => g.corte === corte.id)?.grade}
+                </Text>
+                <TouchableOpacity
+                  style={styles.deleteButton}
+                  onPress={() => deleteGrade(corte.id)}
+                >
+                  <Trash2 color="#fff" size={20} />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         ))}
@@ -191,23 +232,6 @@ export default function StudentGradeRecorder() {
 }
 
 const styles = StyleSheet.create({
-  picker: {
-    height: 50,
-    width: "100%",
-  },
-  profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-  },
-
-  image: {
-    width: wp(50),
-    height: wp(50),
-    alignSelf: "center",
-    marginBottom: hp(2),
-    borderRadius: theme.radius.sm,
-  },
   headerBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -243,10 +267,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#e91e63",
     marginTop: 10,
+    textAlign: "center",
   },
   profileImageContainer: {
     alignItems: "center",
     marginBottom: 20,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
   },
   gradeOption: {
     flexDirection: "row",
@@ -302,10 +332,21 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontWeight: "bold",
   },
-  savedGrade: {
+  savedGradeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: 15,
+    backgroundColor: "#f5f5f5",
+  },
+  savedGrade: {
     fontSize: 16,
     color: "#4caf50",
     fontWeight: "bold",
+  },
+  deleteButton: {
+    backgroundColor: "#f44336",
+    padding: 10,
+    borderRadius: 5,
   },
 });
