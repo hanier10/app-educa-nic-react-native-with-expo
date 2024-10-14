@@ -6,6 +6,7 @@ import {
   Alert,
   Pressable,
   ScrollView,
+  ImageBackground,
 } from "react-native";
 import React from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
@@ -68,62 +69,68 @@ const Home = () => {
   ];
 
   return (
-    <ScreenWrapper bg="white">
-      <StatusBar style="dark" />
-      <ScrollView>
-        <View style={styles.header}>
-          <Text style={styles.title}>EducaNic</Text>
-          <View style={styles.icons}>
-            <Pressable onPress={() => router.push("notifications")}>
-              <Icon
-                name="heart"
-                size={hp(3)}
-                strokeWidth={2}
-                color={theme.colors.text}
-              />
-            </Pressable>
-            <Pressable onPress={() => router.push("newPost")}>
-              <Icon
-                name="plus"
-                size={hp(3)}
-                strokeWidth={2}
-                color={theme.colors.text}
-              />
-            </Pressable>
-            <Pressable onPress={() => router.push("profile")}>
-              <Avatar
-                uri={user?.image}
-                size={hp(4.3)}
-                rounded={theme.radius.sm}
-                style={{ borderWidth: 2 }}
-              />
-            </Pressable>
+    <ImageBackground
+      source={require("../../assets/images/fondo2.jpg")}
+      style={styles.backgroundImage}
+      imageStyle={{ opacity: 0.1 }}
+    >
+      <ScreenWrapper bg="white">
+        <StatusBar style="dark" />
+        <ScrollView>
+          <View style={styles.header}>
+            <Text style={styles.title}>EducaNic</Text>
+            <View style={styles.icons}>
+              <Pressable onPress={() => router.push("notifications")}>
+                <Icon
+                  name="heart"
+                  size={hp(3)}
+                  strokeWidth={2}
+                  color={theme.colors.text}
+                />
+              </Pressable>
+              <Pressable onPress={() => router.push("newPost")}>
+                <Icon
+                  name="plus"
+                  size={hp(3)}
+                  strokeWidth={2}
+                  color={theme.colors.text}
+                />
+              </Pressable>
+              <Pressable onPress={() => router.push("profile")}>
+                <Avatar
+                  uri={user?.image}
+                  size={hp(4.3)}
+                  rounded={theme.radius.sm}
+                  style={{ borderWidth: 2 }}
+                />
+              </Pressable>
+            </View>
           </View>
-        </View>
 
-        {/* Bienvenida */}
-        <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeText}>Bienvenido/a {user?.name}</Text>
-        </View>
+          {/* Bienvenida */}
+          <View style={styles.welcomeContainer}>
+            <Text style={styles.welcomeText}>Bienvenido/a {user?.name}</Text>
+          </View>
 
-        <View>
-          <HomeBannerSlider />
-        </View>
+          <View>
+            <HomeBannerSlider />
+          </View>
 
-        <View style={styles.subjectsContainer}>
-          <Text style={styles.subjectsTitle}>Asignaturas a Impartir</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.subjectsScroll}
-          >
-            {subjects.map((subject, index) => (
-              <SubjectCard key={index} {...subject} />
-            ))}
-          </ScrollView>
-        </View>
-      </ScrollView>
-    </ScreenWrapper>
+          <View style={styles.subjectsContainer}>
+            <Text style={styles.subjectsTitle}>Asignaturas a Impartir</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={styles.subjectsScroll}
+            >
+              {subjects.map((subject, index) => (
+                <SubjectCard key={index} {...subject} />
+              ))}
+            </ScrollView>
+          </View>
+        </ScrollView>
+      </ScreenWrapper>
+    </ImageBackground>
   );
 };
 
@@ -131,6 +138,11 @@ export default Home;
 
 const styles = StyleSheet.create({
   // ... (keep your existing styles)
+  backgroundImage: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",

@@ -25,13 +25,22 @@
 
 export const bannerData: BannerDataTypes[] = [
   {
-    bannerImageUrl: require("../assets/banner/11.jpg"),
+    bannerImageUrl: require("../assets/images/fondo2.jpg"),
   },
   {
-    bannerImageUrl: require("../assets/banner/2.webp"),
+    bannerImageUrl: require("../assets/images/fondo3.jpg"),
   },
   {
-    bannerImageUrl: require("../assets/banner/3.webp"),
+    bannerImageUrl: require("../assets/images/fondo4.jpg"),
+  },
+  {
+    bannerImageUrl: require("../assets/images/fondo5.jpg"),
+  },
+  {
+    bannerImageUrl: require("../assets/images/fondo6.jpg"),
+  },
+  {
+    bannerImageUrl: require("../assets/images/fondo7.jpg"),
   },
   // {
   //   bannerImageUrl: require("../assets/banner/4.webp"),

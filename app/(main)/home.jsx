@@ -136,10 +136,6 @@ const Home = () => {
       style={styles.backgroundImage}
       imageStyle={{ opacity: 0.1 }}
     >
-      {/* <LinearGradient
-        colors={["#1188E4", "rgba(0,0,255,0.6)"]}
-        style={styles.gradient}
-      > */}
       <ScreenWrapper>
         <StatusBar style="dark" />
         <ScrollView>
