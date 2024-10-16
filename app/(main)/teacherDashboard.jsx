@@ -72,21 +72,23 @@ const Home = () => {
     },
   ];
 
+  const totalStudents = 100; // Asumimos que hay 100 estudiantes en total
+
   const attendanceData = {
     labels: ["Lun", "Mar", "Mié", "Jue", "Vie"],
     datasets: [
       {
-        data: [96, 98, 100, 97, 100],
+        data: [85, 90, 88, 92, 87],
       },
     ],
   };
 
-  const totalStudents = 30; // Asumimos que hay 100 estudiantes en total
-
   const handleBarClick = (index) => {
     const day = attendanceData.labels[index];
-    const attendance = attendanceData.datasets[0].data[index];
-    const studentsPresent = Math.round((attendance / 30) * totalStudents);
+    const attendancePercentage = attendanceData.datasets[0].data[index];
+    const studentsPresent = Math.round(
+      (attendancePercentage / 100) * totalStudents
+    );
     setSelectedDay(day);
     setSelectedAttendance(studentsPresent);
     setModalVisible(true);
@@ -139,7 +141,6 @@ const Home = () => {
 
           <View style={styles.chartContainer}>
             <Text style={styles.chartTitle}>Asistencia Semanal</Text>
-            <Text style={styles.chartTitle2}>Asignatura Biología</Text>
             <BarChart
               data={attendanceData}
               width={Dimensions.get("window").width - wp(8)}
@@ -150,13 +151,13 @@ const Home = () => {
                 backgroundGradientFrom: "#ffffff",
                 backgroundGradientTo: "#ffffff",
                 decimalPlaces: 0,
-                color: (opacity = 1) => `rgba(75, 192, 192, ${opacity})`, // Color verde para las barras
+                color: (opacity = 1) => `rgba(75, 192, 192, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                 style: {
                   borderRadius: 16,
                 },
                 barPercentage: 0.8,
-                fillShadowGradient: "rgba(75, 192, 192, 1)", // Relleno verde sólido
+                fillShadowGradient: "rgba(75, 192, 192, 1)",
                 fillShadowGradientOpacity: 1,
               }}
               style={{
@@ -256,12 +257,6 @@ const styles = StyleSheet.create({
   chartContainer: {
     marginTop: hp(3),
     paddingHorizontal: wp(4),
-  },
-  chartTitle2: {
-    fontSize: hp(2.5),
-    fontWeight: "semibold",
-    color: theme.colors.text,
-    marginBottom: hp(2),
   },
   chartTitle: {
     fontSize: hp(2.5),
