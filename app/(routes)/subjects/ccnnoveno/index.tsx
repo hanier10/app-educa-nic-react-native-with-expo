@@ -159,6 +159,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   backButton: {
     marginRight: wp(4),
+    padding: 16,
   },
   headerBar: {
     flexDirection: "row",

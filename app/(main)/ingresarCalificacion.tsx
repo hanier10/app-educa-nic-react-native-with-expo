@@ -20,6 +20,7 @@ import { hp, wp } from "@/helpers/common";
 import { theme } from "@/constants/theme";
 import Avatar from "@/components/Avatar";
 import { supabase } from "@/lib/supabase";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Grade {
   corte: string;
@@ -183,6 +184,9 @@ export default function StudentGradeRecorder() {
       </View>
 
       <ScrollView style={styles.container}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </Pressable>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Calificaciones del Estudiante</Text>
         </View>
@@ -233,6 +237,10 @@ export default function StudentGradeRecorder() {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    marginRight: wp(4),
+    padding: 16,
+  },
   headerBar: {
     flexDirection: "row",
     alignItems: "center",

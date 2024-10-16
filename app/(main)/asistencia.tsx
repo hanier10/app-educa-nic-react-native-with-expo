@@ -18,6 +18,7 @@ import { theme } from "@/constants/theme";
 import Avatar from "@/components/Avatar";
 import { supabase } from "@/lib/supabase";
 import { ThumbsUp } from "lucide-react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Student {
   id: string;
@@ -130,6 +131,9 @@ export default function AttendanceList() {
         </View>
       </View>
       <View style={styles.container}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </Pressable>
         <Text style={styles.header}>Registro Asistencia del día</Text>
         <Text style={styles.date}>
           {new Date().toLocaleDateString("es-ES", {
@@ -153,6 +157,10 @@ export default function AttendanceList() {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    marginRight: wp(4),
+    padding: 16,
+  },
   headerBar: {
     flexDirection: "row",
     alignItems: "center",

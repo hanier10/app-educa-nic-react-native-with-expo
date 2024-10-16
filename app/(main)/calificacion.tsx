@@ -19,6 +19,7 @@ import Avatar from "@/components/Avatar";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "expo-router";
 import { supabase } from "@/lib/supabase";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Student {
   id: string;
@@ -106,6 +107,9 @@ export default function GradeRecorder() {
       </View>
 
       <View style={styles.header}>
+        <Pressable onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="black" />
+        </Pressable>
         <Text style={styles.title}>Registro Calificaciones</Text>
       </View>
       <FlatList
@@ -118,6 +122,10 @@ export default function GradeRecorder() {
 }
 
 const styles = StyleSheet.create({
+  backButton: {
+    marginRight: wp(4),
+    padding: 16,
+  },
   headerBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -140,7 +148,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   header: {
-    alignItems: "center",
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",
@@ -149,6 +156,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     color: "#333",
+    textAlign: "center",
   },
   subject: {
     fontSize: 18,
