@@ -139,6 +139,7 @@ const Home = () => {
 
           <View style={styles.chartContainer}>
             <Text style={styles.chartTitle}>Asistencia Semanal</Text>
+            <Text style={styles.chartTitle2}>Asignatura Biología</Text>
             <BarChart
               data={attendanceData}
               width={Dimensions.get("window").width - wp(8)}
@@ -255,6 +256,12 @@ const styles = StyleSheet.create({
   chartContainer: {
     marginTop: hp(3),
     paddingHorizontal: wp(4),
+  },
+  chartTitle2: {
+    fontSize: hp(2.5),
+    fontWeight: "semibold",
+    color: theme.colors.text,
+    marginBottom: hp(2),
   },
   chartTitle: {
     fontSize: hp(2.5),
