@@ -74,7 +74,7 @@ const Home = () => {
       style={styles.backgroundImage}
       imageStyle={{ opacity: 0.1 }}
     >
-      <ScreenWrapper bg="white">
+      <ScreenWrapper>
         <StatusBar style="dark" />
         <ScrollView>
           <View style={styles.header}>
