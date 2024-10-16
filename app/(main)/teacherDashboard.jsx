@@ -1,29 +1,33 @@
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
-  Alert,
   Pressable,
   ScrollView,
   ImageBackground,
+  Dimensions,
+  Modal,
+  TouchableOpacity,
 } from "react-native";
-import React from "react";
+import { StatusBar } from "expo-status-bar";
+import { useRouter } from "expo-router";
+import { BarChart } from "react-native-chart-kit";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import { useAuth } from "../../contexts/AuthContext";
-import { supabase } from "../../lib/supabase";
 import { hp, wp } from "../../helpers/common";
 import { theme } from "../../constants/theme";
 import Icon from "../../assets/icons";
-import { useRouter } from "expo-router";
 import Avatar from "../../components/Avatar";
-import { StatusBar } from "expo-status-bar";
 import HomeBannerSlider from "../../components/HomeBannerSlider";
 import SubjectCard from "../../components/SubjectCard";
 
 const Home = () => {
-  const { user, setAuth } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedDay, setSelectedDay] = useState("");
+  const [selectedAttendance, setSelectedAttendance] = useState(0);
 
   const subjects = [
     {
@@ -68,6 +72,26 @@ const Home = () => {
     },
   ];
 
+  const attendanceData = {
+    labels: ["Lun", "Mar", "Mié", "Jue", "Vie"],
+    datasets: [
+      {
+        data: [96, 98, 100, 97, 100],
+      },
+    ],
+  };
+
+  const totalStudents = 30; // Asumimos que hay 100 estudiantes en total
+
+  const handleBarClick = (index) => {
+    const day = attendanceData.labels[index];
+    const attendance = attendanceData.datasets[0].data[index];
+    const studentsPresent = Math.round((attendance / 30) * totalStudents);
+    setSelectedDay(day);
+    setSelectedAttendance(studentsPresent);
+    setModalVisible(true);
+  };
+
   return (
     <ImageBackground
       source={require("../../assets/images/fondo2.jpg")}
@@ -107,13 +131,39 @@ const Home = () => {
             </View>
           </View>
 
-          {/* Bienvenida */}
           <View style={styles.welcomeContainer}>
             <Text style={styles.welcomeText}>Bienvenido/a {user?.name}</Text>
           </View>
 
-          <View>
-            <HomeBannerSlider />
+          <HomeBannerSlider />
+
+          <View style={styles.chartContainer}>
+            <Text style={styles.chartTitle}>Asistencia Semanal</Text>
+            <BarChart
+              data={attendanceData}
+              width={Dimensions.get("window").width - wp(8)}
+              height={220}
+              yAxisLabel="%"
+              chartConfig={{
+                backgroundColor: "#ffffff",
+                backgroundGradientFrom: "#ffffff",
+                backgroundGradientTo: "#ffffff",
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(75, 192, 192, ${opacity})`, // Color verde para las barras
+                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                barPercentage: 0.8,
+                fillShadowGradient: "rgba(75, 192, 192, 1)", // Relleno verde sólido
+                fillShadowGradientOpacity: 1,
+              }}
+              style={{
+                marginVertical: 8,
+                borderRadius: 16,
+              }}
+              onDataPointClick={({ index }) => handleBarClick(index)}
+            />
           </View>
 
           <View style={styles.subjectsContainer}>
@@ -130,6 +180,27 @@ const Home = () => {
           </View>
         </ScrollView>
       </ScreenWrapper>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>
+              {selectedDay}: {selectedAttendance} estudiantes asistieron
+            </Text>
+            <TouchableOpacity
+              style={styles.buttonClose}
+              onPress={() => setModalVisible(false)}
+            >
+              <Text style={styles.textStyle}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 };
@@ -137,7 +208,6 @@ const Home = () => {
 export default Home;
 
 const styles = StyleSheet.create({
-  // ... (keep your existing styles)
   backgroundImage: {
     flex: 1,
     width: "100%",
@@ -160,7 +230,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 18,
   },
-
   subjectsContainer: {
     marginTop: hp(3),
     paddingHorizontal: wp(4),
@@ -182,5 +251,52 @@ const styles = StyleSheet.create({
     fontSize: hp(3),
     fontWeight: "bold",
     color: theme.colors.text,
+  },
+  chartContainer: {
+    marginTop: hp(3),
+    paddingHorizontal: wp(4),
+  },
+  chartTitle: {
+    fontSize: hp(2.5),
+    fontWeight: "bold",
+    color: theme.colors.text,
+    marginBottom: hp(2),
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginTop: 15,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
